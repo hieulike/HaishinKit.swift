@@ -10,6 +10,8 @@ protocol RTMPSocketCompatible: class {
     var totalBytesOut: Int64 { get }
     var queueBytesOut: Int64 { get }
     var inputBuffer: Data { get set }
+    var inputQueue: DispatchQueue { get set }
+    var outputQueue: DispatchQueue { get set }
     var securityLevel: StreamSocketSecurityLevel { get set }
     var delegate: RTMPSocketDelegate? { get set }
 

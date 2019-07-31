@@ -10,16 +10,16 @@ open class NetSocket: NSObject {
     public var windowSizeC: Int = NetSocket.defaultWindowSizeC
     public var securityLevel: StreamSocketSecurityLevel = .none
     public var totalBytesIn: Int64 = 0
+    public var inputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetSocket.input", qos: .userInitiated)
+    public var outputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetSocket.output", qos: .userInitiated)
     public private(set) var totalBytesOut: Int64 = 0
     public private(set) var queueBytesOut: Int64 = 0
 
     var inputStream: InputStream?
     var outputStream: OutputStream?
-    var inputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetSocket.input")
-
     private var buffer: UnsafeMutablePointer<UInt8>?
     private var runloop: RunLoop?
-    private let outputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetSocket.output")
+    
     private var timeoutHandler: (() -> Void)?
 
     public func connect(withName: String, port: Int) {

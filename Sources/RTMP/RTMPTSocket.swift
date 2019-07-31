@@ -8,7 +8,8 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
     var chunkSizeS: Int = RTMPChunk.defaultSize
     var inputBuffer = Data()
     var securityLevel: StreamSocketSecurityLevel = .none
-    weak var delegate: RTMPSocketDelegate?
+    var inputQueue: DispatchQueue = DispatchQueue.main
+    var outputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.RTMPTSocket.output", qos: .userInitiated)
     var connected: Bool = false {
         didSet {
             if connected {
@@ -36,6 +37,8 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
         }
     }
 
+    weak var delegate: RTMPSocketDelegate?
+
     private(set) var totalBytesIn: Int64 = 0
     private(set) var totalBytesOut: Int64 = 0
     private(set) var queueBytesOut: Int64 = 0
@@ -56,7 +59,6 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
     private var request: URLRequest!
     private var c2packet = Data()
     private var handshake = RTMPHandshake()
-    private let outputQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.RTMPTSocket.output")
     private var connectionID: String?
     private var isRequesting: Bool = false
     private var outputBuffer = Data()
