@@ -12,6 +12,12 @@ open class HTTPStream: NetStream {
                 self.mixer.videoIO.screen?.stopRunning()
                 #endif
                 self.mixer.stopEncoding()
+                if self.tsWriter.expectedMedias.contains(.audio) {
+                    self.tsWriter.expectedMedias.remove(.audio)
+                }
+                if self.tsWriter.expectedMedias.contains(.video) {
+                    self.tsWriter.expectedMedias.remove(.video)
+                }
                 self.tsWriter.stopRunning()
                 return
             }
@@ -45,6 +51,17 @@ open class HTTPStream: NetStream {
     }
     #endif
 
+    public func attachVideo() {
+        lockQueue.async {
+            self.tsWriter.expectedMedias.insert(.video)
+        }
+    }
+    
+    public func attachAudio() {
+        lockQueue.async {
+            self.tsWriter.expectedMedias.insert(.audio)
+        }
+    }
     func getResource(_ resourceName: String) -> (MIME, String)? {
         let url = URL(fileURLWithPath: resourceName)
         guard let name: String = name, 2 <= url.pathComponents.count && url.pathComponents[1] == name else {

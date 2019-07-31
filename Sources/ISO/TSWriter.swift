@@ -284,7 +284,7 @@ class TSFileWriter: TSWriter {
             }
             return m3u8.description
         }
-        let startIndex = max(0, files.count - TSFileWriter.defaultSegmentCount)
+        let startIndex = 0 //max(0, files.count - TSFileWriter.defaultSegmentCount)
         m3u8.mediaSequence = sequence - TSFileWriter.defaultSegmentMaxCount
         m3u8.mediaList = Array(files[startIndex..<files.count])
         for mediaItem in m3u8.mediaList where mediaItem.duration > m3u8.targetDuration {
